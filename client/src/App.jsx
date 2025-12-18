@@ -1,21 +1,27 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Events from "./pages/Events";
 import CreateEvent from "./pages/CreateEvent";
-import ProtectedRoute from "./components/ProtectedRoute";
 
-const App = () => {
+const ProtectedRoute = ({ children }) => {
+  const token = localStorage.getItem("token");
+  return token ? children : <Navigate to="/login" />;
+};
+
+function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+
       <Route
-        path="/events"
+        path="/"
         element={
           <ProtectedRoute>
             <Events />
           </ProtectedRoute>
         }
       />
+
       <Route
         path="/create"
         element={
@@ -24,8 +30,10 @@ const App = () => {
           </ProtectedRoute>
         }
       />
+
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
-};
+}
 
 export default App;
